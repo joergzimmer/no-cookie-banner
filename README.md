@@ -124,3 +124,7 @@ cd no-cookie-banner
 # demo.html im Browser öffnen, oder über einen lokalen Server:
 npx serve .
 ```
+
+## Lizenz
+
+[MIT](LICENSE) – frei verwendbar, auch kommerziell. Der Copyright- und Lizenzhinweis muss bei Weitergabe erhalten bleiben; im Kopfkommentar von `no-cookie-banner.js` ist er bereits enthalten.

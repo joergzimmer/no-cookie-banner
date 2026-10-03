@@ -8,6 +8,9 @@
  * Plain JavaScript, keine Abhängigkeiten, keine weiteren Dateien.
  * Das Script setzt selbst keine Cookies und speichert nichts im Browser.
  *
+ * Lizenz: MIT, Copyright (c) 2026 joergzimmer
+ * https://github.com/joergzimmer/no-cookie-banner
+ *
  * ---------------------------------------------------------------------------
  * Einbindung
  * ---------------------------------------------------------------------------
