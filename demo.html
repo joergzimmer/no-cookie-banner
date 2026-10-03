@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>No Cookie Banner – Demo</title>
+  <meta name="description" content="Demo für no-cookie-banner.js: ein Hinweis, dass die Website keine Cookies verwendet, der sich selbst wegklickt.">
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --surface: #ffffff;
+      --text: #1c2430;
+      --muted: #5b6676;
+      --border: #dde2e8;
+      --accent: #18a36b;
+      --accent-text: #ffffff;
+      --code-bg: #1f2933;
+      --code-text: #e6edf3;
+      --radius: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #11161c;
+        --surface: #1a2129;
+        --text: #e6edf3;
+        --muted: #9aa6b4;
+        --border: #2c3640;
+        --accent: #3ecf8e;
+        --accent-text: #0b1f14;
+        --code-bg: #0b0f14;
+        --code-text: #e6edf3;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    a { color: var(--accent); }
+
+    .page { max-width: 880px; margin: 0 auto; padding: 48px 16px 160px; }
+
+    header h1 { margin: 0 0 8px; font-size: clamp(28px, 5vw, 40px); line-height: 1.15; letter-spacing: -.01em; }
+    header p { margin: 0; color: var(--muted); font-size: 18px; max-width: 60ch; }
+
+    section {
+      margin-top: 32px;
+      padding: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    section h2 { margin: 0 0 4px; font-size: 20px; }
+    section > p { margin: 0 0 20px; color: var(--muted); }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
+    .full { grid-column: 1 / -1; }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+
+    label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+    .hint { font-weight: 400; color: var(--muted); }
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      font: inherit;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    textarea { resize: vertical; min-height: 88px; }
+    input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .range { display: flex; align-items: center; gap: 12px; }
+    .range input { flex: 1; accent-color: var(--accent); }
+    .range output { min-width: 64px; text-align: right; font-variant-numeric: tabular-nums; }
+
+    .colors { display: flex; flex-wrap: wrap; gap: 16px; }
+    .color { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+    .color input {
+      width: 40px; height: 32px; padding: 0;
+      border: 1px solid var(--border); border-radius: 8px; background: none; cursor: pointer;
+    }
+    .check { display: flex; align-items: center; gap: 8px; font-weight: 400; font-size: 15px; margin: 0; }
+    .check input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    button {
+      font: inherit; font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+    .primary { background: var(--accent); color: var(--accent-text); }
+    .primary:hover { filter: brightness(1.05); }
+    .secondary { background: transparent; color: var(--text); border-color: var(--border); }
+    .secondary:hover { background: var(--bg); }
+
+    .code { position: relative; }
+    pre {
+      margin: 0;
+      padding: 18px;
+      overflow-x: auto;
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: 10px;
+      font: 13.5px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+    .copy {
+      position: absolute; top: 10px; right: 10px;
+      padding: 6px 12px; font-size: 13px;
+      background: rgba(255,255,255,.1); color: var(--code-text);
+      border-color: rgba(255,255,255,.18);
+    }
+    .copy:hover { background: rgba(255,255,255,.18); }
+    @media (max-width: 640px) { pre { padding-top: 52px; } }
+
+    ul.facts { margin: 0; padding-left: 20px; }
+    ul.facts li + li { margin-top: 6px; }
+
+    footer { margin-top: 32px; color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>No Cookie Banner</h1>
+      <p>Ein kurzer Hinweis, dass die Website keine Cookies verwendet – und der Mauszeiger klickt ihn gleich selbst weg.</p>
+    </header>
+
+    <section aria-labelledby="try">
+      <h2 id="try">Ausprobieren</h2>
+      <p>Beim Laden dieser Seite lief das Banner mit den Standardwerten. Passe die Einstellungen an und spiele es erneut ab.</p>
+
+      <form id="config" class="grid" autocomplete="off">
+        <div class="full">
+          <label for="text">Hinweistext</label>
+          <textarea id="text" name="text">Diese Website verwendet keine Cookies und respektiert Ihre Privatsphäre.</textarea>
+        </div>
+
+        <div>
+          <label for="buttonText">Button-Text</label>
+          <input id="buttonText" name="buttonText" type="text" value="OK">
+        </div>
+
+        <div>
+          <label for="position">Position</label>
+          <select id="position" name="position">
+            <option value="bottom" selected>unten mittig</option>
+            <option value="bottom-left">unten links</option>
+            <option value="bottom-right">unten rechts</option>
+            <option value="top">oben mittig</option>
+            <option value="top-left">oben links</option>
+            <option value="top-right">oben rechts</option>
+          </select>
+        </div>
+
+        <div class="full">
+          <label for="duration">Anzeigedauer <span class="hint">bis zum automatischen Klick</span></label>
+          <div class="range">
+            <input id="duration" name="duration" type="range" min="800" max="6000" step="100" value="2000">
+            <output id="durationOut" for="duration">2,0 s</output>
+          </div>
+        </div>
+
+        <div class="full">
+          <label>Farben</label>
+          <div class="colors">
+            <span class="color"><input id="background" name="background" type="color" value="#1f2933"><label for="background" class="check">Hintergrund</label></span>
+            <span class="color"><input id="textColor" name="textColor" type="color" value="#f5f7fa"><label for="textColor" class="check">Text</label></span>
+            <span class="color"><input id="accentColor" name="accentColor" type="color" value="#3ecf8e"><label for="accentColor" class="check">Akzent</label></span>
+            <span class="color"><input id="buttonTextColor" name="buttonTextColor" type="color" value="#0b1f14"><label for="buttonTextColor" class="check">Button-Text</label></span>
+          </div>
+        </div>
+
+        <div class="full">
+          <label class="check"><input id="showIcon" name="showIcon" type="checkbox" checked> Schild-Symbol anzeigen</label>
+        </div>
+      </form>
+
+      <div class="actions">
+        <button type="button" class="primary" id="play">Banner anzeigen</button>
+        <button type="button" class="secondary" id="reset">Zurücksetzen</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="embed">
+      <h2 id="embed">Einbindung</h2>
+      <p>Der Code passt sich deinen Einstellungen oben an. Werte, die dem Standard entsprechen, werden weggelassen.</p>
+      <div class="code">
+        <pre><code id="snippet"></code></pre>
+        <button type="button" class="copy" id="copy">Kopieren</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="facts">
+      <h2 id="facts">Gut zu wissen</h2>
+      <ul class="facts">
+        <li>Eine einzige JavaScript-Datei, keine Abhängigkeiten, keine externen Ressourcen.</li>
+        <li>Das Script setzt keine Cookies und speichert nichts im Browser.</li>
+        <li>Das Banner läuft in einem Shadow DOM – das CSS deiner Seite verändert es nicht.</li>
+        <li>Bei aktivierter Einstellung „Bewegung reduzieren“ entfällt die Zeigerfahrt.</li>
+      </ul>
+    </section>
+
+    <footer>
+      Quellcode und Dokumentation: <a href="https://github.com/joergzimmer/no-cookie-banner">github.com/joergzimmer/no-cookie-banner</a>
+    </footer>
+  </div>
+
+  <script src="no-cookie-banner.js" defer></script>
+  <script>
+    (function () {
+      var form = document.getElementById('config');
+      var durationOut = document.getElementById('durationOut');
+      var snippet = document.getElementById('snippet');
+      var copyBtn = document.getElementById('copy');
+
+      // Muss zu den Standardwerten in no-cookie-banner.js passen
+      var DEFAULTS = {
+        text: form.text.defaultValue,
+        buttonText: 'OK',
+        duration: 2000,
+        position: 'bottom',
+        background: '#1f2933',
+        textColor: '#f5f7fa',
+        accentColor: '#3ecf8e',
+        buttonTextColor: '#0b1f14',
+        showIcon: true
+      };
+
+      var ATTRS = {
+        text: 'data-text',
+        buttonText: 'data-button-text',
+        duration: 'data-duration',
+        position: 'data-position',
+        background: 'data-background',
+        textColor: 'data-text-color',
+        accentColor: 'data-accent-color',
+        buttonTextColor: 'data-button-text-color',
+        showIcon: 'data-show-icon'
+      };
+
+      function readOptions() {
+        return {
+          text: form.text.value.trim() || DEFAULTS.text,
+          buttonText: form.buttonText.value.trim() || DEFAULTS.buttonText,
+          duration: Number(form.duration.value),
+          position: form.position.value,
+          background: form.background.value,
+          textColor: form.textColor.value,
+          accentColor: form.accentColor.value,
+          buttonTextColor: form.buttonTextColor.value,
+          showIcon: form.showIcon.checked
+        };
+      }
+
+      function escapeAttr(value) {
+        return String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/"/g, '&quot;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      function render() {
+        var opts = readOptions();
+        durationOut.textContent = (opts.duration / 1000).toLocaleString('de-DE', { minimumFractionDigits: 1 }) + ' s';
+
+        var lines = ['<script src="no-cookie-banner.js" defer'];
+        Object.keys(ATTRS).forEach(function (key) {
+          if (opts[key] !== DEFAULTS[key]) {
+            lines.push('        ' + ATTRS[key] + '="' + escapeAttr(opts[key]) + '"');
+          }
+        });
+        snippet.textContent = lines.join('\n') + '></' + 'script>';
+      }
+
+      function play() {
+        if (!window.NoCookieBanner) return;
+        NoCookieBanner.hide();
+        var opts = readOptions();
+        opts.delay = 400; // falls noch ein Banner ausblendet
+        NoCookieBanner.show(opts);
+      }
+
+      form.addEventListener('input', render);
+      form.addEventListener('change', render);
+      form.addEventListener('submit', function (e) { e.preventDefault(); play(); });
+      document.getElementById('play').addEventListener('click', play);
+      document.getElementById('reset').addEventListener('click', function () {
+        form.reset();
+        render();
+      });
+
+      copyBtn.addEventListener('click', function () {
+        var done = function () {
+          copyBtn.textContent = 'Kopiert';
+          setTimeout(function () { copyBtn.textContent = 'Kopieren'; }, 1500);
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(snippet.textContent).then(done);
+        } else {
+          var range = document.createRange();
+          range.selectNodeContents(snippet);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          if (document.execCommand('copy')) done();
+          sel.removeAllRanges();
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
