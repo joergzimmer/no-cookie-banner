@@ -13,14 +13,16 @@ Ein kleines JavaScript-Plugin, das kurz einen Hinweis einblendet: **Diese Websit
 
 ## Einbindung
 
-1. [`no-cookie-banner.js`](no-cookie-banner.js) herunterladen und auf den eigenen Webserver legen.
+1. [`no-cookie-banner.js`](no-cookie-banner.js) herunterladen und auf den eigenen Webserver legen – am besten unter einem neutralen Dateinamen wie `hinweis.js` (siehe Hinweis unten).
 2. Vor dem schließenden `</body>`-Tag (oder im `<head>` mit `defer`) einbinden:
 
 ```html
-<script src="/pfad/zu/no-cookie-banner.js" defer></script>
+<script src="/pfad/zu/hinweis.js" defer></script>
 ```
 
 Fertig. Das Banner erscheint beim Laden der Seite mit den Standardwerten.
+
+> **Dateiname:** Die Filterliste „EasyList Cookie“, die Werbeblocker wie uBlock Origin, AdGuard und Brave optional mitbringen, enthält die Regel `-cookie-banner.`. Sie blockiert jede Adresse, die diese Zeichenfolge enthält – also auch `/no-cookie-banner.js`. Besucher mit aktivierter Liste sähen das Banner dann nie. Deshalb die Datei unter einem Namen ohne „cookie“ oder „banner“ ausliefern.
 
 ## Konfiguration
 
