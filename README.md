@@ -87,6 +87,7 @@ Mit `data-auto-start="false"` erscheint das Banner nicht automatisch, sondern er
 | `autoStart` | `data-auto-start` | `true` | Banner beim Laden der Seite automatisch anzeigen |
 | `onlyOnEntry` | `data-only-on-entry` | `false` | Nur anzeigen, wenn der Besucher von einer fremden Seite kommt (siehe [Datenschutz](#datenschutz)) |
 | `showIcon` | `data-show-icon` | `true` | Schild-Symbol links im Banner anzeigen |
+| `maxWidth` | `data-max-width` | `560px` (links/rechts `420px`) | Höchstbreite des Banners, Zahl in px oder CSS-Länge wie `40rem`. Auf schmalen Bildschirmen bleibt das Banner bildschirmbreit. |
 | `background` | `data-background` | `#1f2933` | Hintergrundfarbe des Banners |
 | `textColor` | `data-text-color` | `#f5f7fa` | Textfarbe |
 | `accentColor` | `data-accent-color` | `#3ecf8e` | Farbe von Button und Symbol |

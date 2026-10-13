@@ -1,5 +1,5 @@
 /*!
- * no-cookie-banner.js v1.0.0
+ * no-cookie-banner.js v1.1.0
  *
  * Zeigt kurz einen Hinweis, dass die Website ohne Cookies auskommt.
  * Nach Ablauf der Anzeigedauer fährt ein stilisierter Mauszeiger zum
@@ -64,6 +64,9 @@
  *                    Browser; Standard false)
  *   showIcon         Schild-Symbol anzeigen             data-show-icon
  *                    (Standard true)
+ *   maxWidth         Höchstbreite des Banners, Zahl     data-max-width
+ *                    in px oder CSS-Länge (Standard
+ *                    560px, links/rechts 420px)
  *   background       Hintergrundfarbe des Banners       data-background
  *   textColor        Textfarbe                          data-text-color
  *   accentColor      Farbe von Button und Symbol        data-accent-color
@@ -79,7 +82,7 @@
 
   if (window.NoCookieBanner) return;
 
-  var VERSION = '1.0.0';
+  var VERSION = '1.1.0';
 
   var DEFAULTS = {
     text: 'Diese Website verwendet keine Cookies und respektiert Ihre Privatsphäre.',
@@ -90,6 +93,7 @@
     autoStart: true,
     onlyOnEntry: false,
     showIcon: true,
+    maxWidth: '',
     background: '#1f2933',
     textColor: '#f5f7fa',
     accentColor: '#3ecf8e',
@@ -122,7 +126,7 @@
     '.banner {',
     '  pointer-events: auto; box-sizing: border-box;',
     '  display: flex; align-items: center; gap: 14px;',
-    '  width: 100%; max-width: 560px; margin: 0; padding: 12px 12px 12px 16px;',
+    '  width: 100%; max-width: var(--ncb-max-w, 560px); margin: 0; padding: 12px 12px 12px 16px;',
     '  background: var(--ncb-bg); color: var(--ncb-fg);',
     '  border-radius: 14px;',
     '  box-shadow: 0 12px 32px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.18);',
@@ -130,7 +134,7 @@
     '  opacity: 0; transform: translateY(16px);',
     '  transition: opacity .3s ease, transform .35s cubic-bezier(.2,.8,.2,1);',
     '}',
-    '.wrap.left .banner, .wrap.right .banner { max-width: 420px; }',
+    '.wrap.left .banner, .wrap.right .banner { max-width: var(--ncb-max-w, 420px); }',
     '.wrap.top .banner { transform: translateY(-16px); }',
     '.wrap .banner.is-visible { opacity: 1; transform: none; }',
     '.wrap .banner.is-hiding { opacity: 0; transform: translateY(6px) scale(.97); pointer-events: none; }',
@@ -310,6 +314,8 @@
       '--ncb-z': parseInt(cfg.zIndex, 10) || DEFAULTS.zIndex
     };
     for (var name in vars) host.style.setProperty(name, String(vars[name]));
+    var maxWidth = String(cfg.maxWidth == null ? '' : cfg.maxWidth).trim();
+    if (maxWidth) host.style.setProperty('--ncb-max-w', /^\d+(\.\d+)?$/.test(maxWidth) ? maxWidth + 'px' : maxWidth);
 
     var root = host.attachShadow({ mode: 'open' });
     applyStyles(root, cfg.nonce);
